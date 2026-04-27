@@ -216,3 +216,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# autoresearch-trio local artifacts
+data/
+outputs/
+swanlog/
+run.log
+results.csv

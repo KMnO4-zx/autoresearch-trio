@@ -145,14 +145,18 @@ name = "autoresearch-trio"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "datasets" },
     { name = "pytrio" },
+    { name = "requests" },
     { name = "swanlab" },
     { name = "transformers" },
 ]
 
 [package.metadata]
 requires-dist = [
+    { name = "datasets", specifier = ">=4.8.4" },
     { name = "pytrio", specifier = ">=0.1.13" },
+    { name = "requests", specifier = ">=2.33.1" },
     { name = "swanlab", specifier = ">=0.7.16" },
     { name = "transformers", specifier = ">=5.6.2" },
 ]
