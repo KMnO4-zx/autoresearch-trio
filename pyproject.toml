@@ -1,0 +1,9 @@
+[project]
+name = "autoresearch-trio"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "pytrio>=0.1.13",
+    "swanlab>=0.7.16",
+    "transformers>=5.6.2",
+]
