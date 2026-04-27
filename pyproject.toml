@@ -4,6 +4,7 @@ version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = [
     "datasets>=4.8.4",
+    "matplotlib>=3.10.9",
     "pytrio>=0.1.13",
     "requests>=2.33.1",
     "swanlab>=0.7.16",
