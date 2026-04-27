@@ -129,6 +129,32 @@ def eos_token_id(tokenizer: Any) -> int | None:
         return None
 
 
+def patch_pytrio_tokenizer() -> None:
+    """Use transformers tokenizer loading when pytrio's modelscope loader is unavailable."""
+
+    def transformers_get_tokenizer(base_model: str):
+        from transformers import AutoTokenizer
+
+        try:
+            return AutoTokenizer.from_pretrained(
+                base_model,
+                local_files_only=True,
+                trust_remote_code=True,
+            )
+        except Exception:
+            print(f"Tokenizer not found locally, downloading with transformers: {base_model}")
+            return AutoTokenizer.from_pretrained(base_model, trust_remote_code=True)
+
+    try:
+        import pytrio._utils as pytrio_utils
+        import pytrio.lib.training_client as training_client_module
+
+        pytrio_utils.get_tokenizer = transformers_get_tokenizer
+        training_client_module.get_tokenizer = transformers_get_tokenizer
+    except Exception as exc:
+        print(f"WARNING: could not patch pytrio tokenizer loader: {exc}")
+
+
 def build_sft_arrays(
     example: dict[str, Any],
     tokenizer: Any,
@@ -353,6 +379,8 @@ def run_dry_run(args: argparse.Namespace) -> None:
 
 def train_and_eval(args: argparse.Namespace) -> dict[str, Any]:
     from pytrio import AdamParams, Datum, ModelInput, SamplingParams, ServiceClient
+
+    patch_pytrio_tokenizer()
 
     train_records = load_processed(args.train_path, "processed train data")
     eval_records = load_processed(args.eval_path, "processed eval data")[: args.eval_limit]
