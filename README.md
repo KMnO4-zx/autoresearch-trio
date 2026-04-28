@@ -1,6 +1,6 @@
 # autoresearch-trio
 
-![](./images/autoresearch_progress_gpt55.png)
+![](./images/autoresearch_progress.png)
 
 这是一个由 TRIO 驱动的自主 text-to-SQL 研究循环，设计上参考
 [karpathy/autoresearch](https://github.com/karpathy/autoresearch)。
