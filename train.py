@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import random
 import re
 import subprocess
 import tempfile
@@ -35,13 +36,15 @@ from prepare import (
 # ---------------------------------------------------------------------------
 
 BASE_MODEL = "Qwen/Qwen3-4B-Instruct-2507"
-LORA_RANK = 16
-LEARNING_RATE = 1e-4
+LORA_RANK = 64
+LEARNING_RATE = 5e-5
 BATCH_SIZE = 4
-MAX_STEPS = 10_000
+MAX_STEPS = 100
 EVAL_LIMIT = 120
-SAMPLE_MAX_TOKENS = 256
+SAMPLE_MAX_TOKENS = 512
 SAMPLE_TEMPERATURE = 0.0
+SHUFFLE_TRAINING_RECORDS = True
+TRAIN_SHUFFLE_SEED = 42
 TRAIN_MLP = True
 TRAIN_ATTN = True
 TRAIN_UNEMBED = False
@@ -101,6 +104,8 @@ Evidence:
 Rules:
 - Return only SQL.
 - Use SQLite syntax.
+- Use table and column names exactly as they appear in the schema.
+- Use Evidence for column meanings, aliases, units, and literal values when relevant.
 - Do not explain.
 - Do not use destructive statements.
 
@@ -208,6 +213,9 @@ def extract_sql(text: str) -> str:
 
 
 def make_batches(records: list[dict[str, Any]], batch_size: int) -> Iterable[list[dict[str, Any]]]:
+    if SHUFFLE_TRAINING_RECORDS:
+        records = list(records)
+        random.Random(TRAIN_SHUFFLE_SEED).shuffle(records)
     index = 0
     while True:
         batch = []
