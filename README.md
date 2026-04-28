@@ -9,6 +9,7 @@
 
 - `prepare.py` 是固定的数据和评估框架。
 - `train.py` 是 agent 主要修改的实验文件。
+- `train_async.py` 是可选的异步 TRIO runner，复用 `train.py` 的实验逻辑。
 - `program.md` 是人写给 agent 的自主实验协议。
 - SwanLab 用来记录云端实验曲线。
 - `results.csv` 是本地实验记录的 source of truth。
@@ -215,6 +216,33 @@ uv run train.py --swanlab-mode local
 uv run train.py --swanlab-mode offline
 uv run train.py --swanlab-mode disabled
 ```
+
+## 异步训练
+
+`train_async.py` 使用 TRIO 的 async API，把前后向、优化步骤和 eval 采样提交为异步任务。
+它仍然复用 `train.py` 里的 prompt、超参、SFT mask 和结果记录逻辑，适合在同样的
+`TIME_BUDGET=300` 下提高吞吐。
+
+本地检查：
+
+```bash
+uv run train_async.py --dry-run --swanlab-mode disabled
+```
+
+正式运行：
+
+```bash
+uv run train_async.py \
+  --run-tag apr-gpt5-5 \
+  --description "async baseline" \
+  --train-pipeline-depth 4 \
+  --eval-concurrency 16 \
+  > run.log 2>&1
+```
+
+`--train-pipeline-depth` 控制训练阶段最多同时等待多少个已提交步骤；
+`--eval-concurrency` 控制 eval 采样并发数。数值太大可能让云端队列或本地日志变得难排查，
+建议先用默认值。
 
 ## 实验循环
 

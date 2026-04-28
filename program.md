@@ -20,6 +20,7 @@
    - `README.md`：项目背景。
    - `prepare.py`：固定的数据准备和评估框架；实验过程中不要修改。
    - `train.py`：TRIO 训练脚本；这是主要可编辑文件。
+   - `train_async.py`：可选异步 runner，默认复用 `train.py` 的实验逻辑。
    - `program.md`：当前自主研究协议。
 
 4. 检查本地 BIRD 数据：
@@ -51,6 +52,7 @@ baseline 应该创建 SwanLab 日志，并向 `results.csv` 追加一行记录�
 - 修改 `train.py`。
 - 调整 prompt 格式、evidence 使用方式、数据采样策略、LoRA rank、学习率、batch size、采样参数和 SFT 调度。
 - 如果能保持实验逻辑清晰，可以在 `train.py` 中加入少量辅助函数。
+- 如果目标是提高吞吐，可以改用 `train_async.py` 运行，但实验逻辑仍优先放在 `train.py`。
 
 ## 你不能做什么
 
