@@ -36,7 +36,7 @@ from prepare import (
 # ---------------------------------------------------------------------------
 
 BASE_MODEL = "Qwen/Qwen3-4B-Instruct-2507"
-LORA_RANK = 64
+LORA_RANK = 32
 LEARNING_RATE = 5e-5
 BATCH_SIZE = 4
 MAX_STEPS = 100
