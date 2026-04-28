@@ -41,9 +41,10 @@
    ```
 
 baseline 应该创建 SwanLab 日志，并向 `results.csv` 追加一行记录。
-默认 `prepare.py` 会从 train 数据里按 `db_id` 整库隔离出 50 条 eval 样本；
-这些 holdout 数据库不会进入训练集。这样可以不依赖 Mini-Dev 的 Google Drive
-数据库包。需要官方 Mini-Dev 时，显式使用 `uv run prepare.py --eval-source mini-dev`。
+当前 `train.py` 的默认 `EVAL_LIMIT = 120`。`prepare.py` 默认会从 train 数据里
+按 `db_id` 整库隔离出 holdout eval 样本；这些 holdout 数据库不会进入训练集。
+这样可以不依赖 Mini-Dev 的 Google Drive 数据库包。需要官方 Mini-Dev 时，
+显式使用 `uv run prepare.py --eval-source mini-dev`。
 
 ## 你可以做什么
 
@@ -62,7 +63,7 @@ baseline 应该创建 SwanLab 日志，并向 `results.csv` 追加一行记录�
 
 ## 目标
 
-在 `prepare.py` 固定的 `TIME_BUDGET` 内，最大化 BIRD Mini-Dev SQLite
+在 `prepare.py` 固定的 `TIME_BUDGET` 内，最大化 BIRD train-holdout
 text-to-SQL 表现。
 
 指标优先级：
