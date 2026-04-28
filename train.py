@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import random
 import re
 import subprocess
 import tempfile
@@ -388,6 +389,7 @@ def train_and_eval(args: argparse.Namespace) -> dict[str, Any]:
         raise RuntimeError(f"No training records in {args.train_path}")
     if not eval_records:
         raise RuntimeError(f"No eval records in {args.eval_path}")
+    random.Random(args.seed).shuffle(train_records)
 
     service = ServiceClient()
     train_client = service.create_lora_training_client(
